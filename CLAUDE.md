@@ -46,9 +46,17 @@ pnpm check      # typecheck + test
 Substantive choices live in `docs/design.md` sections 4 (time/TZ), 5 (state transitions),
 and 8 (out-of-scope). If you change one of those, update the doc in the same commit.
 
-## Dispatch (dev-meta branch only)
+## Concierge / Q&A entry point (dev-meta branch only)
 
-When a `.claude/dispatcher.md` file exists, read it first. It routes incoming questions
-to one of five specialized subagents in `.claude/agents/`. Do not answer directly without
-dispatching — the consistency is worth more than the ~5 lines of overhead. Five worked
-examples are in `dispatcher.md` to anchor what each subagent does.
+When a `.claude/dispatcher.md` file exists, **always read it first** before responding
+to any user message. It is the concierge: it tells you how to introduce yourself when
+asked "what can you do?", how to classify the user's question, and which of the five
+specialized subagents in `.claude/agents/` to dispatch to.
+
+For greetings or "what can you do?" type messages, reply with the **self-introduction
+template** in `dispatcher.md`. For everything else, identify the category from the
+routing matrix and dispatch.
+
+Fifteen example dispatches in `dispatcher.md` cover the realistic question surface —
+from "how do I run the tests" all the way to "is the cascade order in classify.ts
+correct given sujet §1".
