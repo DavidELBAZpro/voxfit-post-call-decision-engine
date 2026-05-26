@@ -4,13 +4,26 @@
 > (telephony, transcript-derived insights, tool events, case context) into a normalized
 > decision: what the outcome was, how the case should move, and what to schedule next.
 
+**Status:** 81 tests, all green. Strict TypeScript, zero `any`, zero clock reads in `src/`.
+
 ## TL;DR
 
 ```ts
 import { buildPostCallDecision } from "voxfit-post-call-decision-engine";
 
-const decision = buildPostCallDecision(input);
-// → { normalizedOutcome, casePatch, scheduledActions, callPatch, warnings, auditLog }
+const decision = buildPostCallDecision({
+  now: "2025-03-15T14:00:00.000Z",
+  timezone: "Europe/Paris",
+  call: { callSid: "CA123", status: "completed", amdStatus: "human", durationSec: 60, performedAt: "2025-03-15T13:59:00.000Z" },
+  case: { caseId: "case-1", status: "active", amountRemaining: 250, currency: "EUR" },
+  step: { stepActionId: "step-1", maxAttempts: 5, attemptsSoFar: 0, retryDelayHours: 24, promiseFollowupDelayDays: 1 },
+  insights: { outcome: "Accepted full payment later", paymentDate: "2025-04-01" },
+  toolEvents: [],
+});
+// → normalizedOutcome: "promise_to_pay"
+// → casePatch: { status: "temp_excluded", paymentPromiseDate: "2025-04-01", nextActionAt: "..." }
+// → scheduledActions: [{ type: "call", runAt: ... }, { type: "payment_reminder", runAt: "2025-04-01T07:00:00.000Z" }]
+// → auditLog: ["classify: insights.outcome=\"Accepted full payment later\" → promise_to_pay", "plan: ..."]
 ```
 
 Pure function. No I/O. No clock reads. Same input → same output.
