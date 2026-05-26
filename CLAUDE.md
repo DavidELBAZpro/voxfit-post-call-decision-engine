@@ -45,3 +45,10 @@ pnpm check      # typecheck + test
 
 Substantive choices live in `docs/design.md` sections 4 (time/TZ), 5 (state transitions),
 and 8 (out-of-scope). If you change one of those, update the doc in the same commit.
+
+## Dispatch (dev-meta branch only)
+
+When a `.claude/dispatcher.md` file exists, read it first. It routes incoming questions
+to one of five specialized subagents in `.claude/agents/`. Do not answer directly without
+dispatching — the consistency is worth more than the ~5 lines of overhead. Five worked
+examples are in `dispatcher.md` to anchor what each subagent does.
