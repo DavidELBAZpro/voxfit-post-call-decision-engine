@@ -6,7 +6,8 @@
 
 **Status:** 109 tests (99 unit + 10 end-to-end JSON scenarios), all green. Strict
 TypeScript, zero `any`, zero clock reads in `src/`. Coverage thresholds 90% (current:
-96% statements / 90% branches / 97% functions / 96% lines).
+96% statements / 90% branches / 97% functions / 96% lines). **Throughput: 22k–2.7M
+decisions/sec** depending on path; see [`docs/performance.md`](docs/performance.md).
 
 ## Pipeline at a glance
 
@@ -71,6 +72,7 @@ pnpm test         # run all 109 tests once
 pnpm test:watch   # TDD loop
 pnpm typecheck    # tsc --noEmit
 pnpm coverage     # vitest with v8 coverage (thresholds: 90% across the board)
+pnpm bench        # latency + throughput per scenario (see docs/performance.md)
 pnpm check        # typecheck + test (CI runs this)
 ```
 
