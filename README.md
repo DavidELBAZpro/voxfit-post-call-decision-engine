@@ -5,7 +5,9 @@
 > decision: outcome, case state patch, scheduled actions, warnings, audit log.
 
 **Status:** 109 tests (99 unit + 10 end-to-end JSON scenarios), all green. Strict
-TypeScript, zero `any`, zero clock reads in `src/`. Coverage 96% / 90% / 97% / 96%.
+TypeScript, zero `any`, zero clock reads in `src/`. Coverage
+[**96% / 90% / 97% / 96%**](https://htmlpreview.github.io/?https://github.com/DavidELBAZpro/voxfit-post-call-decision-engine/blob/main/docs/coverage/index.html)
+(statements / branches / functions / lines — click to browse the full HTML report).
 
 ## Pipeline
 
@@ -123,3 +125,4 @@ test coverage, file-by-file extension plans, and audits against the business rul
 - [`docs/tradeoffs.md`](docs/tradeoffs.md) — choices made + what was given up
 - [`docs/limitations.md`](docs/limitations.md) — what's not done and why (§2 = decisions needed from product)
 - [`docs/performance.md`](docs/performance.md) — bench results + interpretation
+- [`docs/coverage/`](docs/coverage/) — last HTML coverage snapshot ([open online](https://htmlpreview.github.io/?https://github.com/DavidELBAZpro/voxfit-post-call-decision-engine/blob/main/docs/coverage/index.html))
