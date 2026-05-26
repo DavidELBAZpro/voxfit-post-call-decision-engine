@@ -4,8 +4,9 @@
 > (telephony, transcript-derived insights, tool events, case context) into a normalized
 > decision: what the outcome was, how the case should move, and what to schedule next.
 
-**Status:** 99 unit tests + 10 scenario tests, all green. Strict TypeScript, zero `any`,
-zero clock reads in `src/`.
+**Status:** 109 tests (99 unit + 10 end-to-end JSON scenarios), all green. Strict
+TypeScript, zero `any`, zero clock reads in `src/`. Coverage thresholds 90% (current:
+96% statements / 90% branches / 97% functions / 96% lines).
 
 ## Pipeline at a glance
 
@@ -34,8 +35,9 @@ flowchart LR
     class Input,Output io
 ```
 
-Three pure functions, glued by a 15-line orchestrator. `now` is always an input — no
-clock reads. Same input → same output.
+Four pure functions (`validate`, `classify`, `scheduling`, `planActions`) glued by a
+15-line orchestrator. `now` is always an input — no clock reads. Same input → same
+output.
 
 ## TL;DR
 
@@ -78,26 +80,42 @@ the HTML report as an artifact. See [`.github/workflows/ci.yml`](.github/workflo
 
 ## Where to look
 
+**Start here:**
 - [`scenarios/`](scenarios/) — 10 JSON fixtures showing the full input/output for the
   main outcomes. Read these first — they're worth 1000 words of docs.
 - [`docs/design.md`](docs/design.md) — problem framing, decomposition, choices, tradeoffs.
+
+**Source:**
+- [`src/buildPostCallDecision.ts`](src/buildPostCallDecision.ts) — the orchestrator
+  (validate → classify → planActions).
+- [`src/validate.ts`](src/validate.ts) — runtime sanity checks → warnings (timezone,
+  duration, performedAt, amountRemaining, call window).
 - [`src/classify.ts`](src/classify.ts) — signal cascade (telephony overrides AI).
 - [`src/scheduling.ts`](src/scheduling.ts) — Luxon-based time / TZ / DST helpers.
 - [`src/planActions.ts`](src/planActions.ts) — outcome → case patches + scheduled actions.
-- [`src/buildPostCallDecision.ts`](src/buildPostCallDecision.ts) — the orchestrator.
-- [`tests/edge-cases.test.ts`](tests/edge-cases.test.ts) — explicit edge cases from the sujet.
+- [`src/sanitize.ts`](src/sanitize.ts) — `sanitize()` + `truncate()` for audit-log
+  defense in depth.
+
+**Tests:**
+- [`tests/edge-cases.test.ts`](tests/edge-cases.test.ts) — explicit edge cases from the
+  sujet's "Edge Cases To Consider" list.
 - [`tests/edge-cases-extra.test.ts`](tests/edge-cases-extra.test.ts) — 17 additional
   edge cases we brainstormed beyond the sujet.
 
+**For any AI session touching this repo:** [`CLAUDE.md`](CLAUDE.md) — hard rules (TDD
+discipline, no clock reads, audit-log contract).
+
 ## Approach in one paragraph
 
-A pipeline of three pure functions — `classify`, `planActions`, glued by
-`buildPostCallDecision` — chosen for testability (each layer tested in isolation),
-determinism (everything is a transform of inputs, including `now`), and explainability
-(every branch drops one audit line). Time arithmetic uses Luxon so that DST in
-`Europe/Paris` doesn't lie. The classification cascade is order-sensitive: telephony
-safety signals (`amdStatus`, `status`, `durationSec`) override AI insights — we don't
-trust a transcript-extracted "promise to pay" on a call that never connected.
+A pipeline of pure functions — `validate` (input sanity → warnings), `classify` (signal
+cascade → normalized outcome), and `planActions` (outcome + context → case patches +
+scheduled actions), glued by a 15-line `buildPostCallDecision`. Chosen for testability
+(each layer tested in isolation), determinism (everything is a transform of inputs,
+including `now`), and explainability (every branch drops one audit line). Time
+arithmetic uses Luxon so DST in `Europe/Paris` doesn't lie. The classification cascade
+is order-sensitive: telephony safety signals (`amdStatus`, `status`, `durationSec`)
+override AI insights — we don't trust a transcript-extracted "promise to pay" on a call
+that never connected.
 
 ## Assumptions, tradeoffs, limitations
 
