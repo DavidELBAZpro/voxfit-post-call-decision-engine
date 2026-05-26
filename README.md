@@ -82,25 +82,11 @@ trust a transcript-extracted "promise to pay" on a call that never connected.
 
 ## How I used AI
 
-This solution was built with Claude Code (Opus 4.7). The AI:
+This solution was built with Claude Code (Opus 4.7). For a full account of what the AI
+proposed, where I pushed back, and what I verified manually, see **[`AI_USAGE.md`](AI_USAGE.md)**.
 
-- proposed the three-layer decomposition (`classify` / `scheduling` / `planActions`)
-  after reading the sujet;
-- generated test cases **first** for each module (TDD discipline);
-- implemented the modules to make the tests pass;
-- drafted audit messages and warnings.
-
-I (the human) validated:
-
-- the **cascade order** in `classify` against the sujet's section 1 — telephony-safety
-  outcomes must win over AI-derived ones. Pushed back on an earlier draft that put
-  `Stop contact` above `voice_mail`.
-- the **DST behavior** for `Europe/Paris` 2025 by spot-checking the spring-forward day
-  (March 30) and fall-back day (October 26) in the scheduling tests.
-- every assertion in `tests/edge-cases.test.ts` before letting the implementation pass.
-- the **determinism contract** by reviewing all `src/` files for any `new Date()` or
-  `Date.now()` reads (there are none — `now` is always an argument).
-
-What I did **not** delegate: the choice of architecture (pipeline of pure functions),
-the choice of dep (Luxon), and the choice to keep the spec doc small but explicit
-rather than producing a heavy ADR set.
+The short version: I caught a monolith proposal early, pushed for Luxon over native
+`Date`, fixed a regex bug in the AI's sanitize implementation, rejected a `DateTime.now()`
+"convenience" call that would have broken determinism, and re-read the cascade order
+against sujet §1 before letting it stand. TDD discipline meant every test file was red
+before green — the commit history records this.
