@@ -66,6 +66,7 @@ export const classify = (input: PostCallInput): Classification => {
 
   if (
     typeof call.durationSec === "number" &&
+    call.durationSec > 0 &&
     call.durationSec < EARLY_TERMINATION_THRESHOLD_SEC
   ) {
     audit.push(

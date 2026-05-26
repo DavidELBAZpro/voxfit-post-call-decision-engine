@@ -1,3 +1,4 @@
+import { sanitize, truncate } from "./sanitize.js";
 import {
   delayedCallAt,
   nextManualReviewAt,
@@ -12,6 +13,8 @@ import type {
   ScheduledAction,
   ToolEvent,
 } from "./types.js";
+
+const SUMMARY_MAX_CHARS = 2000;
 
 export type PlanContext = {
   outcome: NormalizedOutcome;
@@ -48,13 +51,15 @@ const summarizeToolEvents = (
   const warnings: string[] = [];
   const audit: string[] = [];
   for (const event of events) {
+    const safeName = sanitize(event.name);
+    const safeCreatedAt = sanitize(event.createdAt);
     if (event.status === "success" && PAYMENT_LINK_TOOLS.has(event.name)) {
       paymentLinkSent = true;
-      audit.push(`plan: tool ${event.name} succeeded → paymentLinkSent=true`);
+      audit.push(`plan: tool ${safeName} succeeded → paymentLinkSent=true`);
     }
     if (event.status === "failed") {
-      warnings.push(`Tool ${event.name} failed at ${event.createdAt}`);
-      audit.push(`plan: tool ${event.name} failed at ${event.createdAt}`);
+      warnings.push(`Tool ${safeName} failed at ${safeCreatedAt}`);
+      audit.push(`plan: tool ${safeName} failed at ${safeCreatedAt}`);
     }
   }
   return { paymentLinkSent, warnings, audit };
@@ -70,7 +75,9 @@ const finalize = (
 
   const callPatch: CallPatch = {
     outcome: patch.callPatch.outcome,
-    ...(input.insights.summary !== undefined && { summary: input.insights.summary }),
+    ...(input.insights.summary !== undefined && {
+      summary: truncate(input.insights.summary, SUMMARY_MAX_CHARS),
+    }),
     ...(toolSummary.paymentLinkSent && { paymentLinkSent: true }),
   };
 
