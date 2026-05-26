@@ -92,28 +92,24 @@ real-time voice) in [`docs/performance.md`](docs/performance.md).
 ## Ask this codebase questions (on `dev-meta`)
 
 The [`dev-meta`](https://github.com/DavidELBAZpro/voxfit-post-call-decision-engine/tree/dev-meta)
-branch ships a Q&A system. Switch to it and launch Claude Code with a natural-language
-question — it reads `.claude/dispatcher.md`, identifies the question category, and
-either answers directly or routes to one of five specialized subagents.
+branch ships a Q&A concierge: switch to it and launch your AI assistant with a
+natural-language question. It reads `.claude/dispatcher.md`, identifies the category,
+and either answers directly or routes to one of five specialized subagents.
 
 ```sh
 git checkout dev-meta
-claude -p "Hi, what can you do?"
+[Your AI Assistant] "Hi, what can you do?"
 ```
 
-Or interactive, then ask anything:
-
-```sh
-git checkout dev-meta && claude
-```
+The first reply is always a self-introduction. From there, ask anything:
 
 ```
-> Hi, what can you do?
 > Why was Luxon chosen over native Date?
 > Is the negative duration edge case handled?
 > What's the current test coverage percent?
 > How would I add a new outcome called callback_no_show?
 > Is the cascade order in classify.ts correct given sujet §1?
+> What's missing that needs a product decision?
 ```
 
 Covers: project goals, architecture, design rationale, edge cases (covered or not),
