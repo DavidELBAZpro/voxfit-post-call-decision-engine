@@ -1,13 +1,19 @@
 name: CI
 
 on:
-  push:
-    branches: [main, dev-meta]
-  pull_request:
-    branches: [main]
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Branch to run CI on"
+        required: true
+        default: main
+        type: choice
+        options:
+          - main
+          - dev-meta
 
 concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}
+  group: ci-${{ github.workflow }}-${{ inputs.branch }}
   cancel-in-progress: true
 
 jobs:
@@ -18,11 +24,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
         with:
-          version: 9
+          ref: ${{ inputs.branch }}
+
+      - name: Install pnpm (driven by packageManager field)
+        uses: pnpm/action-setup@v4
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -43,6 +49,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-html
+          name: coverage-html-${{ inputs.branch }}
           path: coverage/
           retention-days: 7
