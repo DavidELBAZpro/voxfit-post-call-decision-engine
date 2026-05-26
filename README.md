@@ -59,26 +59,19 @@ determinism (everything is a transform of inputs, including `now`), and explaina
 safety signals (`amdStatus`, `status`, `durationSec`) override AI insights — we don't
 trust a transcript-extracted "promise to pay" on a call that never connected.
 
-## Assumptions and tradeoffs
+## Assumptions, tradeoffs, limitations
 
-- **Input is trusted-shaped.** TypeScript guards the boundary; no runtime JSON-schema
-  validation. In a real service we'd add Zod. Out of scope at 2h.
-- **Audit log is plain English.** Not i18n. Reviewer-readable beats production-ready here.
-- **`manual_review` is scheduled the next morning at 09:00 Paris time.** No business-day
-  logic beyond "skip weekends if the step's call window forbids them". A real system
-  would honor holidays.
-- **Retry budget is per-case, not per-channel.** Only the simple "max attempts reached"
-  check is enforced.
-- **One reminder per decision.** The engine never emits more than one
-  `payment_reminder` even with duplicate `send_payment_link` events.
+Split into dedicated files for the reviewer:
 
-## Known limitations
-
-- No persistence, no Twilio/Stripe/OpenAI integration (out of scope per sujet).
-- The `unknown` outcome bucket is wide — anything we can't classify lands there with a
-  manual-review action. A production system would refine this taxonomy with telemetry.
-- DST is correct for `Europe/Paris` (IANA tz). Other zones would require a different
-  policy on `paymentReminderAt`.
+- **[`tradeoffs.md`](tradeoffs.md)** — every meaningful choice (architecture, Luxon over
+  `Date`, cascade order, window-end exclusivity, etc.) with what was given up.
+- **[`limitations.md`](limitations.md)** — what's not done, organized by **why**:
+  capped by timebox (§1), capped by missing business decisions (§2), or deliberately
+  out of scope (§3). §2 is the most important read.
+- **[`docs/business-rules.md`](docs/business-rules.md)** — the 14 codified rules with
+  pointers to the tests that verify each.
+- **[`docs/edge-cases.md`](docs/edge-cases.md)** — every edge case considered (covered
+  + acknowledged-but-not-handled).
 
 ## How I used AI
 
