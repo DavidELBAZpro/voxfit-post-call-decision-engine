@@ -1,7 +1,5 @@
 # Voxfit — Post-Call Decision Engine
 
-[![CI](https://github.com/DavidELBAZpro/voxfit-post-call-decision-engine/actions/workflows/ci.yml/badge.svg)](https://github.com/DavidELBAZpro/voxfit-post-call-decision-engine/actions/workflows/ci.yml)
-
 > Take-home exercise. A deterministic TypeScript module that turns post-call signals
 > (telephony, transcript-derived insights, tool events, case context) into a normalized
 > decision: what the outcome was, how the case should move, and what to schedule next.
@@ -74,8 +72,9 @@ pnpm coverage     # vitest with v8 coverage (thresholds: 90% across the board)
 pnpm check        # typecheck + test (CI runs this)
 ```
 
-CI (GitHub Actions) runs `typecheck` + `coverage` on every push and PR. See
-[`.github/workflows/ci.yml`](.github/workflows/ci.yml).
+CI is **manual-only** (workflow_dispatch). Trigger it from the GitHub Actions tab,
+picking the branch (`main` or `dev-meta`). It runs `typecheck` + `coverage` and uploads
+the HTML report as an artifact. See [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
 
 ## Where to look
 
@@ -116,8 +115,9 @@ All in [`docs/`](docs/):
 
 ## How I used AI
 
-This solution was built with Claude Code (Opus 4.7). For a full account of what the AI
-proposed, where I pushed back, and what I verified manually, see **[`AI_USAGE.md`](AI_USAGE.md)**.
+This solution was built with Claude Code (Opus 4.7). For a full account of my AI-era
+methodology — and what I pushed back on during this take-home — see
+**[`docs/AI_USAGE.md`](docs/AI_USAGE.md)**.
 
 The short version: I caught a monolith proposal early, pushed for Luxon over native
 `Date`, fixed a regex bug in the AI's sanitize implementation, rejected a `DateTime.now()`
