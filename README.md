@@ -92,16 +92,13 @@ real-time voice) in [`docs/performance.md`](docs/performance.md).
 ## Ask this codebase questions (on `dev-meta`)
 
 The [`dev-meta`](https://github.com/DavidELBAZpro/voxfit-post-call-decision-engine/tree/dev-meta)
-branch ships a Q&A concierge: switch to it and launch your AI coding assistant
-(Claude Code, Codex, or equivalent) with a natural-language question. It reads
-`.claude/dispatcher.md`, identifies the category, and either answers directly or
-routes to one of five specialized subagents.
+branch ships a Q&A concierge: switch to it and launch your AI assistant with a
+natural-language question. It reads `.claude/dispatcher.md`, identifies the category,
+and either answers directly or routes to one of five specialized subagents.
 
 ```sh
 git checkout dev-meta
 [Your AI Assistant] "Hi, what can you do?"
-# e.g.   claude -p "Hi, what can you do?"
-#        codex   "Hi, what can you do?"
 ```
 
 The first reply is always a self-introduction. From there, ask anything:
