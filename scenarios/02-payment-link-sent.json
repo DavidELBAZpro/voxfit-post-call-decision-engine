@@ -1,0 +1,51 @@
+{
+  "name": "payment-link-sent",
+  "description": "Caller agrees to pay now and a payment link is successfully sent → wait_payment_confirmation",
+  "input": {
+    "now": "2025-03-15T14:00:00.000Z",
+    "timezone": "Europe/Paris",
+    "call": {
+      "callSid": "CA-link-002",
+      "status": "completed",
+      "amdStatus": "human",
+      "durationSec": 85,
+      "performedAt": "2025-03-15T13:58:00.000Z"
+    },
+    "case": {
+      "caseId": "case-002",
+      "status": "active",
+      "amountRemaining": 250,
+      "currency": "EUR"
+    },
+    "step": {
+      "stepActionId": "step-002",
+      "maxAttempts": 5,
+      "attemptsSoFar": 0,
+      "retryDelayHours": 24
+    },
+    "insights": {
+      "summary": "Caller agreed to settle immediately via the SMS link.",
+      "outcome": "Accepted full payment now"
+    },
+    "toolEvents": [
+      {
+        "id": "tool-link-001",
+        "name": "send_payment_link",
+        "status": "success",
+        "createdAt": "2025-03-15T13:59:30.000Z"
+      }
+    ]
+  },
+  "expected": {
+    "normalizedOutcome": "wait_payment_confirmation",
+    "casePatch": {
+      "status": "temp_excluded",
+      "temporaryExclusionReason": "wait_payment_confirmation"
+    },
+    "callPatch": {
+      "outcome": "wait_payment_confirmation",
+      "paymentLinkSent": true,
+      "summary": "Caller agreed to settle immediately via the SMS link."
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "name": "debt-dispute",
+  "description": "Caller disputes the debt → manual_review scheduled, no automated retry",
+  "input": {
+    "now": "2025-03-17T10:00:00.000Z",
+    "timezone": "Europe/Paris",
+    "call": {
+      "callSid": "CA-disp-008",
+      "status": "completed",
+      "amdStatus": "human",
+      "durationSec": 180,
+      "performedAt": "2025-03-17T09:57:00.000Z"
+    },
+    "case": {
+      "caseId": "case-008",
+      "status": "active",
+      "amountRemaining": 950,
+      "currency": "EUR"
+    },
+    "step": {
+      "stepActionId": "step-008",
+      "maxAttempts": 5,
+      "attemptsSoFar": 1,
+      "retryDelayHours": 24
+    },
+    "insights": {
+      "summary": "Caller insists the amount is incorrect and was already paid.",
+      "outcome": "Debt dispute"
+    }
+  },
+  "expected": {
+    "normalizedOutcome": "disputed",
+    "casePatch": {
+      "status": "temp_excluded",
+      "temporaryExclusionReason": "disputed"
+    },
+    "scheduledActions": [
+      { "type": "manual_review" }
+    ]
+  }
+}

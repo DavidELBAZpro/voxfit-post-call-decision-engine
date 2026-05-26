@@ -1,0 +1,38 @@
+{
+  "name": "voicemail-detected",
+  "description": "AMD detects a machine answering → voice_mail, retry scheduled",
+  "input": {
+    "now": "2025-03-17T10:00:00.000Z",
+    "timezone": "Europe/Paris",
+    "call": {
+      "callSid": "CA-vm-006",
+      "status": "completed",
+      "amdStatus": "machine_end",
+      "durationSec": 12,
+      "performedAt": "2025-03-17T09:59:00.000Z"
+    },
+    "case": {
+      "caseId": "case-006",
+      "status": "active",
+      "amountRemaining": 200,
+      "currency": "EUR"
+    },
+    "step": {
+      "stepActionId": "step-006",
+      "maxAttempts": 5,
+      "attemptsSoFar": 0,
+      "retryDelayHours": 24
+    },
+    "insights": {}
+  },
+  "expected": {
+    "normalizedOutcome": "voice_mail",
+    "casePatch": {
+      "status": "temp_excluded",
+      "temporaryExclusionReason": "voice_mail"
+    },
+    "scheduledActions": [
+      { "type": "call" }
+    ]
+  }
+}

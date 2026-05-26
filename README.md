@@ -1,10 +1,43 @@
 # Voxfit — Post-Call Decision Engine
 
+[![CI](https://github.com/DavidELBAZpro/voxfit-post-call-decision-engine/actions/workflows/ci.yml/badge.svg)](https://github.com/DavidELBAZpro/voxfit-post-call-decision-engine/actions/workflows/ci.yml)
+
 > Take-home exercise. A deterministic TypeScript module that turns post-call signals
 > (telephony, transcript-derived insights, tool events, case context) into a normalized
 > decision: what the outcome was, how the case should move, and what to schedule next.
 
-**Status:** 81 tests, all green. Strict TypeScript, zero `any`, zero clock reads in `src/`.
+**Status:** 99 unit tests + 10 scenario tests, all green. Strict TypeScript, zero `any`,
+zero clock reads in `src/`.
+
+## Pipeline at a glance
+
+```mermaid
+flowchart LR
+    Input([PostCallInput])
+    Output([PostCallDecision])
+
+    subgraph Pipeline[" "]
+        direction LR
+        V[validate<br/><i>safety warnings</i>]
+        C[classify<br/><i>signal cascade</i>]
+        P[planActions<br/><i>state + schedule</i>]
+        V --> C --> P
+    end
+
+    Input --> V
+    P --> Output
+    P -. uses .-> S[scheduling<br/><i>Luxon · Paris TZ · DST</i>]
+
+    classDef layer fill:#e0f2fe,stroke:#0369a1,color:#0c4a6e
+    classDef helper fill:#fce7f3,stroke:#be185d,color:#831843
+    classDef io fill:#f5f5f4,stroke:#57534e,color:#1c1917
+    class V,C,P layer
+    class S helper
+    class Input,Output io
+```
+
+Three pure functions, glued by a 15-line orchestrator. `now` is always an input — no
+clock reads. Same input → same output.
 
 ## TL;DR
 
@@ -34,20 +67,28 @@ Requires Node 20+. Uses **pnpm**.
 
 ```sh
 pnpm install
-pnpm test         # run all tests once
+pnpm test         # run all 109 tests once
 pnpm test:watch   # TDD loop
 pnpm typecheck    # tsc --noEmit
-pnpm check        # typecheck + test
+pnpm coverage     # vitest with v8 coverage (thresholds: 90% across the board)
+pnpm check        # typecheck + test (CI runs this)
 ```
+
+CI (GitHub Actions) runs `typecheck` + `coverage` on every push and PR. See
+[`.github/workflows/ci.yml`](.github/workflows/ci.yml).
 
 ## Where to look
 
+- [`scenarios/`](scenarios/) — 10 JSON fixtures showing the full input/output for the
+  main outcomes. Read these first — they're worth 1000 words of docs.
 - [`docs/design.md`](docs/design.md) — problem framing, decomposition, choices, tradeoffs.
 - [`src/classify.ts`](src/classify.ts) — signal cascade (telephony overrides AI).
 - [`src/scheduling.ts`](src/scheduling.ts) — Luxon-based time / TZ / DST helpers.
 - [`src/planActions.ts`](src/planActions.ts) — outcome → case patches + scheduled actions.
 - [`src/buildPostCallDecision.ts`](src/buildPostCallDecision.ts) — the orchestrator.
 - [`tests/edge-cases.test.ts`](tests/edge-cases.test.ts) — explicit edge cases from the sujet.
+- [`tests/edge-cases-extra.test.ts`](tests/edge-cases-extra.test.ts) — 17 additional
+  edge cases we brainstormed beyond the sujet.
 
 ## Approach in one paragraph
 
@@ -61,13 +102,13 @@ trust a transcript-extracted "promise to pay" on a call that never connected.
 
 ## Assumptions, tradeoffs, limitations
 
-Split into dedicated files for the reviewer:
+All in [`docs/`](docs/):
 
-- **[`tradeoffs.md`](tradeoffs.md)** — every meaningful choice (architecture, Luxon over
-  `Date`, cascade order, window-end exclusivity, etc.) with what was given up.
-- **[`limitations.md`](limitations.md)** — what's not done, organized by **why**:
-  capped by timebox (§1), capped by missing business decisions (§2), or deliberately
-  out of scope (§3). §2 is the most important read.
+- **[`docs/tradeoffs.md`](docs/tradeoffs.md)** — every meaningful choice (architecture,
+  Luxon over `Date`, cascade order, window-end exclusivity, ...) with what was given up.
+- **[`docs/limitations.md`](docs/limitations.md)** — what's not done, organized by
+  **why**: capped by timebox (§1), capped by missing business decisions (§2), or
+  deliberately out of scope (§3). §2 is the most important read.
 - **[`docs/business-rules.md`](docs/business-rules.md)** — the 14 codified rules with
   pointers to the tests that verify each.
 - **[`docs/edge-cases.md`](docs/edge-cases.md)** — every edge case considered (covered
