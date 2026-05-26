@@ -1,9 +1,9 @@
 # Question Dispatcher / Concierge
 
-This file is the **entry point** for any AI assistant session (Claude Code, Codex, or
-equivalent) running in this repo. When a user asks a question, you (the orchestrator)
-read this file, identify the category, and either answer directly using docs/code OR
-dispatch to the right subagent in `.claude/agents/`.
+This file is the **entry point** for any AI assistant session running in this repo.
+When a user asks a question, you (the orchestrator) read this file, identify the
+category, and either answer directly using docs/code OR dispatch to the right
+subagent in `.claude/agents/`.
 
 If the user's first message is a greeting or a "what can you do?" / "introduce
 yourself" — reply with the **self-introduction** template below. For any other
