@@ -1,0 +1,42 @@
+{
+  "name": "dst-spring-forward-reminder",
+  "description": "Payment reminder scheduled on the DST spring-forward day (2025-03-30) → 09:00 Paris = 07:00 UTC (CEST has just started)",
+  "input": {
+    "now": "2025-03-15T14:00:00.000Z",
+    "timezone": "Europe/Paris",
+    "call": {
+      "callSid": "CA-dst-010",
+      "status": "completed",
+      "amdStatus": "human",
+      "durationSec": 110,
+      "performedAt": "2025-03-15T13:58:00.000Z"
+    },
+    "case": {
+      "caseId": "case-010",
+      "status": "active",
+      "amountRemaining": 300,
+      "currency": "EUR"
+    },
+    "step": {
+      "stepActionId": "step-010",
+      "maxAttempts": 5,
+      "attemptsSoFar": 0,
+      "retryDelayHours": 24,
+      "promiseFollowupDelayDays": 1
+    },
+    "insights": {
+      "outcome": "Accepted full payment later",
+      "paymentDate": "2025-03-30"
+    }
+  },
+  "expected": {
+    "normalizedOutcome": "promise_to_pay",
+    "casePatch": {
+      "paymentPromiseDate": "2025-03-30"
+    },
+    "scheduledActions": [
+      { "type": "call" },
+      { "type": "payment_reminder", "runAt": "2025-03-30T07:00:00.000Z" }
+    ]
+  }
+}

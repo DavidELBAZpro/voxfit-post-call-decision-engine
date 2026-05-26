@@ -1,0 +1,46 @@
+{
+  "name": "callback-snapped",
+  "description": "Caller requests a callback but the requested time is outside the call window → snapped to next valid slot + warning",
+  "input": {
+    "now": "2025-03-17T10:00:00.000Z",
+    "timezone": "Europe/Paris",
+    "call": {
+      "callSid": "CA-cb-007",
+      "status": "completed",
+      "amdStatus": "human",
+      "durationSec": 95,
+      "performedAt": "2025-03-17T09:59:00.000Z"
+    },
+    "case": {
+      "caseId": "case-007",
+      "status": "active",
+      "amountRemaining": 600,
+      "currency": "EUR"
+    },
+    "step": {
+      "stepActionId": "step-007",
+      "maxAttempts": 5,
+      "attemptsSoFar": 0,
+      "retryDelayHours": 24,
+      "callWindow": {
+        "days": ["mon", "tue", "wed", "thu", "fri"],
+        "start": "10:00",
+        "end": "18:00"
+      }
+    },
+    "insights": {
+      "outcome": "Call rescheduled",
+      "callbackAt": "2025-03-18T20:00:00.000Z"
+    }
+  },
+  "expected": {
+    "normalizedOutcome": "callback_scheduled",
+    "casePatch": {
+      "status": "temp_excluded",
+      "temporaryExclusionReason": "callback_scheduled"
+    },
+    "scheduledActions": [
+      { "type": "call" }
+    ]
+  }
+}

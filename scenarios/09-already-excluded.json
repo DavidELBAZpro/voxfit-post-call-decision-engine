@@ -1,0 +1,38 @@
+{
+  "name": "already-permanently-excluded",
+  "description": "Case is already perm_excluded but the engine is called anyway → no-op + warning",
+  "input": {
+    "now": "2025-03-17T10:00:00.000Z",
+    "timezone": "Europe/Paris",
+    "call": {
+      "callSid": "CA-excl-009",
+      "status": "completed",
+      "amdStatus": "human",
+      "durationSec": 90,
+      "performedAt": "2025-03-17T09:58:00.000Z"
+    },
+    "case": {
+      "caseId": "case-009",
+      "status": "perm_excluded",
+      "amountRemaining": 400,
+      "currency": "EUR"
+    },
+    "step": {
+      "stepActionId": "step-009",
+      "maxAttempts": 5,
+      "attemptsSoFar": 0,
+      "retryDelayHours": 24
+    },
+    "insights": {
+      "outcome": "Accepted full payment later",
+      "paymentDate": "2025-04-15"
+    }
+  },
+  "expected": {
+    "normalizedOutcome": "promise_to_pay",
+    "casePatch": {
+      "nextActionAt": null
+    },
+    "scheduledActions": []
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "name": "promise-to-pay-future-date",
+  "description": "Caller accepts full payment later with a valid future date → reminder on promise date + follow-up call",
+  "input": {
+    "now": "2025-03-15T14:00:00.000Z",
+    "timezone": "Europe/Paris",
+    "call": {
+      "callSid": "CA-promise-001",
+      "status": "completed",
+      "amdStatus": "human",
+      "durationSec": 120,
+      "performedAt": "2025-03-15T13:58:00.000Z"
+    },
+    "case": {
+      "caseId": "case-001",
+      "status": "active",
+      "amountRemaining": 450,
+      "currency": "EUR"
+    },
+    "step": {
+      "stepActionId": "step-001",
+      "maxAttempts": 5,
+      "attemptsSoFar": 1,
+      "retryDelayHours": 24,
+      "promiseFollowupDelayDays": 2
+    },
+    "insights": {
+      "summary": "Caller confirmed they will pay in full by April 1st.",
+      "outcome": "Accepted full payment later",
+      "paymentDate": "2025-04-01"
+    }
+  },
+  "expected": {
+    "normalizedOutcome": "promise_to_pay",
+    "casePatch": {
+      "status": "temp_excluded",
+      "temporaryExclusionReason": "promise_to_pay",
+      "paymentPromiseDate": "2025-04-01"
+    },
+    "callPatch": {
+      "outcome": "promise_to_pay",
+      "summary": "Caller confirmed they will pay in full by April 1st."
+    },
+    "scheduledActions": [
+      { "type": "call" },
+      { "type": "payment_reminder", "runAt": "2025-04-01T07:00:00.000Z" }
+    ]
+  }
+}

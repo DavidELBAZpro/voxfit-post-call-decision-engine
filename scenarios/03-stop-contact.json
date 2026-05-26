@@ -1,0 +1,43 @@
+{
+  "name": "stop-contact",
+  "description": "Caller asks to stop being contacted → permanent exclusion, no scheduled actions",
+  "input": {
+    "now": "2025-03-15T14:00:00.000Z",
+    "timezone": "Europe/Paris",
+    "call": {
+      "callSid": "CA-stop-003",
+      "status": "completed",
+      "amdStatus": "human",
+      "durationSec": 45,
+      "performedAt": "2025-03-15T13:59:00.000Z"
+    },
+    "case": {
+      "caseId": "case-003",
+      "status": "active",
+      "amountRemaining": 1200,
+      "currency": "EUR"
+    },
+    "step": {
+      "stepActionId": "step-003",
+      "maxAttempts": 5,
+      "attemptsSoFar": 2,
+      "retryDelayHours": 24
+    },
+    "insights": {
+      "summary": "Caller asked us to stop calling.",
+      "outcome": "Stop contact"
+    }
+  },
+  "expected": {
+    "normalizedOutcome": "do_not_call",
+    "casePatch": {
+      "status": "perm_excluded",
+      "permanentExclusionReason": "Recipient asked to stop contact",
+      "nextActionAt": null
+    },
+    "scheduledActions": [],
+    "callPatch": {
+      "outcome": "do_not_call"
+    }
+  }
+}

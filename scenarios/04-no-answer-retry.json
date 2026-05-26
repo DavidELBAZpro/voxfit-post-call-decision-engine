@@ -1,0 +1,44 @@
+{
+  "name": "no-answer-retry",
+  "description": "Phone rings but nobody answers, attempts still below max → retry call after retryDelayHours",
+  "input": {
+    "now": "2025-03-17T10:00:00.000Z",
+    "timezone": "Europe/Paris",
+    "call": {
+      "callSid": "CA-na-004",
+      "status": "no-answer",
+      "amdStatus": null,
+      "durationSec": 0,
+      "performedAt": "2025-03-17T09:59:00.000Z"
+    },
+    "case": {
+      "caseId": "case-004",
+      "status": "active",
+      "amountRemaining": 350,
+      "currency": "EUR"
+    },
+    "step": {
+      "stepActionId": "step-004",
+      "maxAttempts": 5,
+      "attemptsSoFar": 1,
+      "retryDelayHours": 24,
+      "callWindow": {
+        "days": ["mon", "tue", "wed", "thu", "fri"],
+        "start": "10:00",
+        "end": "18:00"
+      }
+    },
+    "insights": {}
+  },
+  "expected": {
+    "normalizedOutcome": "no_answer",
+    "casePatch": {
+      "status": "temp_excluded",
+      "temporaryExclusionReason": "no_answer"
+    },
+    "scheduledActions": [
+      { "type": "call" }
+    ],
+    "warnings": []
+  }
+}

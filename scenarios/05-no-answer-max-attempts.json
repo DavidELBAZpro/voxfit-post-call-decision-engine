@@ -1,0 +1,38 @@
+{
+  "name": "no-answer-max-attempts",
+  "description": "Phone never picks up across all allowed attempts → manual_review + warning",
+  "input": {
+    "now": "2025-03-17T10:00:00.000Z",
+    "timezone": "Europe/Paris",
+    "call": {
+      "callSid": "CA-max-005",
+      "status": "no-answer",
+      "amdStatus": null,
+      "durationSec": 0,
+      "performedAt": "2025-03-17T09:59:00.000Z"
+    },
+    "case": {
+      "caseId": "case-005",
+      "status": "active",
+      "amountRemaining": 800,
+      "currency": "EUR"
+    },
+    "step": {
+      "stepActionId": "step-005",
+      "maxAttempts": 3,
+      "attemptsSoFar": 3,
+      "retryDelayHours": 24
+    },
+    "insights": {}
+  },
+  "expected": {
+    "normalizedOutcome": "no_answer",
+    "casePatch": {
+      "status": "temp_excluded",
+      "temporaryExclusionReason": "no_answer"
+    },
+    "scheduledActions": [
+      { "type": "manual_review" }
+    ]
+  }
+}
