@@ -5,9 +5,10 @@
 > decision: outcome, case state patch, scheduled actions, warnings, audit log.
 
 **Status:** 109 tests (99 unit + 10 end-to-end JSON scenarios), all green. Strict
-TypeScript, zero `any`, zero clock reads in `src/`. Coverage
-[**96% / 90% / 97% / 96%**](https://htmlpreview.github.io/?https://github.com/DavidELBAZpro/voxfit-post-call-decision-engine/blob/main/docs/coverage/index.html)
-(statements / branches / functions / lines — click to browse the full HTML report).
+TypeScript, zero `any`, zero clock reads in `src/`. Coverage **98.31% statements /
+91.02% branches / 100% functions / 98.31% lines** (per-file breakdown below).
+
+![Coverage report per file](docs/coverage.png)
 
 ## Pipeline
 
@@ -48,13 +49,22 @@ pnpm install
 pnpm test         # all 109 tests once
 pnpm test:watch   # TDD loop
 pnpm typecheck    # tsc --noEmit
-pnpm coverage     # v8 coverage (90% thresholds)
+pnpm coverage     # v8 coverage (90% thresholds, HTML in coverage/lcov-report/)
 pnpm bench        # latency + throughput per scenario
 pnpm check        # typecheck + test (CI runs this)
 ```
 
 CI is **manual-only** (workflow_dispatch). Trigger it from the GitHub Actions tab,
 choose the branch (`main` or `dev-meta`). See [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
+
+To refresh the coverage screenshot (`docs/coverage.png`):
+
+```sh
+pnpm coverage
+"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless --disable-gpu \
+  --hide-scrollbars --window-size=1400,1000 \
+  --screenshot=docs/coverage.png "file://$PWD/coverage/lcov-report/index.html"
+```
 
 ## Scenarios
 
@@ -125,4 +135,5 @@ test coverage, file-by-file extension plans, and audits against the business rul
 - [`docs/tradeoffs.md`](docs/tradeoffs.md) — choices made + what was given up
 - [`docs/limitations.md`](docs/limitations.md) — what's not done and why (§2 = decisions needed from product)
 - [`docs/performance.md`](docs/performance.md) — bench results + interpretation
-- [`docs/coverage/`](docs/coverage/) — last HTML coverage snapshot ([open online](https://htmlpreview.github.io/?https://github.com/DavidELBAZpro/voxfit-post-call-decision-engine/blob/main/docs/coverage/index.html))
+- [`docs/coverage.png`](docs/coverage.png) — last coverage screenshot (regenerate
+  with the recipe below)
