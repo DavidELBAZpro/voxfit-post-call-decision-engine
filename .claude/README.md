@@ -13,7 +13,7 @@ setup used during development.
 - **`agents/`** — Five specialized subagents, each with a tight responsibility:
   - `runtime-helper.md` — install, run, test, build (Haiku, fastest)
   - `code-explorer.md` — read-only "what does X do" lookups
-  - `arch-explainer.md` — "why was Y chosen" using `docs/design.md` and `AI_USAGE.md`
+  - `arch-explainer.md` — "why was Y chosen" using `docs/design.md` and `docs/AI_USAGE.md`
   - `feature-extender.md` — file-by-file change plans for new features (plan only, no edits)
   - `rules-reviewer.md` — audit code vs. business rules vs. the original sujet
 - **`../CLAUDE.md`** (repo root, shipped on `main` too) — hard rules for any Claude

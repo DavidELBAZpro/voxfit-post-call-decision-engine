@@ -42,7 +42,7 @@ yourself**, then escalate.
 > "Why did you pick Luxon over date-fns or native Date?"
 
 - **Dispatch:** `arch-explainer`
-- **Reads:** `docs/design.md` §4, `AI_USAGE.md` §2.2.
+- **Reads:** `docs/design.md` §4, `docs/AI_USAGE.md` §2.2.
 - **Expected answer:** Native `Date` has no concept of named zones — only offsets — so a
   rule like "09:00 Paris time on a date" is provably wrong on DST days. `date-fns-tz`
   works but Luxon's IANA-aware API is cleaner for this domain. The 20kB cost is
